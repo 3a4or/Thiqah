@@ -43,4 +43,10 @@ class PostsAdapter(val context: Context, val  list: ArrayList<Posts>, recyclerCl
         val  container: LinearLayout = itemView.ll_container
     }
 
+    fun addData(listItems: ArrayList<Posts>) {
+        var size = this.list.size
+        this.list.addAll(listItems)
+        var sizeNew = this.list.size
+        notifyItemRangeChanged(size, sizeNew)
+    }
 }

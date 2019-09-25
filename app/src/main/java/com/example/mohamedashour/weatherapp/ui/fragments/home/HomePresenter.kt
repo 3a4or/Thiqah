@@ -1,6 +1,6 @@
 package com.example.mohamedashour.weatherapp.ui.fragments.home
 
-import com.example.mohamedashour.weatherapp.data.db.entities.Movie
+import android.util.Log
 import com.example.mohamedashour.weatherapp.data.models.Posts
 import com.example.mohamedashour.weatherapp.ui.activities.base.mvp.BasePresenter
 import com.example.mohamedashour.weatherapp.data.network.RetrofitClient
@@ -15,14 +15,22 @@ class HomePresenter(view: HomeContract.HomeView) : BasePresenter<HomeContract.Ho
         this.view = view
     }
 
-    override fun getHomeData(start: Int) {
+    override fun getHomeData(start: Int, type: String) {
         view!!.setProgressBar(true)
         val call: Call<ArrayList<Posts>> = RetrofitClient.webService().getPosts("posts?_start=$start&_limit=15")
         call.enqueue(object : Callback<ArrayList<Posts>> {
 
             override fun onResponse(call: Call<ArrayList<Posts>>, response: Response<ArrayList<Posts>>) {
                 view!!.setProgressBar(false)
-                view!!.receiveData(response.body()!!)
+                if (response.body() != null) {
+                    view!!.receiveData(response.body()!!, type)
+                }
+                if (response.raw().cacheResponse != null) {
+                    Log.e("SSS", "response came from cache")
+                }
+                if (response.raw().networkResponse != null) {
+                    Log.e("SSS", "response came from server")
+                }
             }
 
             override fun onFailure(call: Call<ArrayList<Posts>>, t: Throwable) {
@@ -47,5 +55,25 @@ class HomePresenter(view: HomeContract.HomeView) : BasePresenter<HomeContract.Ho
             }
 
         })
+    }
+
+    override fun validation(title: String, body: String, id: Int, userId: Int, type: String) {
+        if (title == "") {
+            view!!.errorTitle()
+        }
+        if (body == "") {
+            view!!.errorBody()
+        }
+        if (title != "" && body != "") {
+            view!!.validationDone(id, userId, type)
+        }
+    }
+
+    override fun addPost(title: String, body: String, id: Int, userId: Int, type: String) {
+
+    }
+
+    override fun updatePost(title: String, body: String, id: Int, userId: Int, type: String) {
+
     }
 }

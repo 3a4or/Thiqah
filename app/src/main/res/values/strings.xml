@@ -8,5 +8,12 @@
     <string name="label_favorite">Favorites</string>
     <string name="label_title">Title : </string>
     <string name="label_details">Details : </string>
+    <string name="label_save">Save</string>
+    <string name="label_cancel">Cancel</string>
     <string name="msg_deleted">Post deleted successfully</string>
+    <string name="msg_added">Post added successfully</string>
+    <string name="msg_updated">Post updated successfully</string>
+    <string name="msg_title_first">Enter title first</string>
+    <string name="msg_body_first">Enter body first</string>
+
 </resources>
