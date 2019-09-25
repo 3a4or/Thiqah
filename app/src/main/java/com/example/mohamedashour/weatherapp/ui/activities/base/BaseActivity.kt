@@ -5,8 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.example.mohamedashour.weatherapp.R
-import com.example.mohamedashour.weatherapp.ui.fragments.moviedetails.MovieDetailsFragment
-import com.example.mohamedashour.weatherapp.ui.fragments.moviereviews.MovieReviewsFragment
+import com.example.mohamedashour.weatherapp.ui.fragments.postdetails.PostDetailsFragment
 import com.example.mohamedashour.weatherapp.utils.AppTools
 import com.example.mohamedashour.weatherapp.utils.AppUtils
 
@@ -60,15 +59,8 @@ class BaseActivity : AppCompatActivity(), BaseContract.BaseView{
         }
     }
 
-    override fun openVideoDetailsPage() {
-        val fragment = MovieDetailsFragment()
-        setActionBarTitle(bundle.getString("title", ""))
-        fragment.arguments = bundle
-        AppUtils.openFragmentFromActivity(this, fragment, R.id.fl_container, AppTools.STACK_NAME)
-    }
-
-    override fun openVideoReviewsPage() {
-        val fragment = MovieReviewsFragment()
+    override fun openPostDetailsPage() {
+        val fragment = PostDetailsFragment()
         setActionBarTitle(bundle.getString("title", ""))
         fragment.arguments = bundle
         AppUtils.openFragmentFromActivity(this, fragment, R.id.fl_container, AppTools.STACK_NAME)

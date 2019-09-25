@@ -10,8 +10,7 @@ interface BaseContract {
         fun setActionBarTitle(title: String)
         fun showHideActionBar(visibility: Int)
         fun changeActionBarColor()
-        fun openVideoDetailsPage()
-        fun openVideoReviewsPage()
+        fun openPostDetailsPage()
     }
 
     interface BasePresenter : IBasePresenter<BaseView> {

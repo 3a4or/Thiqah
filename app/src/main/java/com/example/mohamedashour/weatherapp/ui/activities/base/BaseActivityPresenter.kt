@@ -11,11 +11,8 @@ class BaseActivityPresenter(view: BaseContract.BaseView) : BasePresenter<BaseCon
 
     override fun openFragmentPage(type: String) {
         when (type) {
-            AppTools.MOVIES_DETAILS -> {
-                view!!.openVideoDetailsPage()
-            }
-            AppTools.MOVIES_REVIEWS -> {
-                view!!.openVideoReviewsPage()
+            AppTools.POST_DETAILS -> {
+                view!!.openPostDetailsPage()
             }
         }
     }

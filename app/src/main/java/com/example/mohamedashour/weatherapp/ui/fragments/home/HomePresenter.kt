@@ -1,11 +1,10 @@
 package com.example.mohamedashour.weatherapp.ui.fragments.home
 
-import com.example.mohamedashour.weatherapp.data.db.AppDatabase
 import com.example.mohamedashour.weatherapp.data.db.entities.Movie
-import com.example.mohamedashour.weatherapp.data.models.PopularMovies
+import com.example.mohamedashour.weatherapp.data.models.Posts
 import com.example.mohamedashour.weatherapp.ui.activities.base.mvp.BasePresenter
 import com.example.mohamedashour.weatherapp.data.network.RetrofitClient
-import com.example.mohamedashour.weatherapp.ui.App
+import com.google.gson.JsonElement
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -16,47 +15,37 @@ class HomePresenter(view: HomeContract.HomeView) : BasePresenter<HomeContract.Ho
         this.view = view
     }
 
-    override fun getHomeData() {
+    override fun getHomeData(start: Int) {
         view!!.setProgressBar(true)
-        val call: Call<PopularMovies> = RetrofitClient.webService().getMovies("discover/movie?sort_by=popularity.desc&api_key=086b41ec08d37d153d8b3ca86ea0f510")
-        call.enqueue(object : Callback<PopularMovies> {
+        val call: Call<ArrayList<Posts>> = RetrofitClient.webService().getPosts("posts?_start=$start&_limit=15")
+        call.enqueue(object : Callback<ArrayList<Posts>> {
 
-            override fun onResponse(call: Call<PopularMovies>, response: Response<PopularMovies>) {
+            override fun onResponse(call: Call<ArrayList<Posts>>, response: Response<ArrayList<Posts>>) {
                 view!!.setProgressBar(false)
-                view!!.receiveData(response.body()!!.results!!)
+                view!!.receiveData(response.body()!!)
             }
 
-            override fun onFailure(call: Call<PopularMovies>, t: Throwable) {
+            override fun onFailure(call: Call<ArrayList<Posts>>, t: Throwable) {
                 view!!.setProgressBar(false)
             }
 
         })
     }
 
-    override fun getHighestMovies() {
+    override fun deletePost(id: Int, item: Posts) {
         view!!.setProgressBar(true)
-        val call: Call<PopularMovies> = RetrofitClient.webService().getMovies("discover/movie?sort_by=vote_average.desc&api_key=086b41ec08d37d153d8b3ca86ea0f510")
-        call.enqueue(object : Callback<PopularMovies> {
+        val call: Call<JsonElement> = RetrofitClient.webService().deletePost("posts/$id")
+        call.enqueue(object : Callback<JsonElement> {
 
-            override fun onResponse(call: Call<PopularMovies>, response: Response<PopularMovies>) {
+            override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
                 view!!.setProgressBar(false)
-                view!!.receiveData(response.body()!!.results!!)
+                view!!.postDeleted(item)
             }
 
-            override fun onFailure(call: Call<PopularMovies>, t: Throwable) {
+            override fun onFailure(call: Call<JsonElement>, t: Throwable) {
                 view!!.setProgressBar(false)
             }
 
         })
-    }
-
-    override fun getFavoriteMovies() {
-        val movies = AppDatabase.getInstance(App.instance()).movieDao().getAll()
-        view!!.receiveFavorites(movies)
-    }
-
-    override fun deleteMovie(movie: Movie) {
-        AppDatabase.getInstance(App.instance()).movieDao().delete(movie)
-        view!!.movieDeleted()
     }
 }

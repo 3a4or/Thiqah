@@ -1,20 +1,16 @@
 package com.example.mohamedashour.weatherapp.ui.fragments.home
 
-import com.example.mohamedashour.weatherapp.data.db.entities.Movie
-import com.example.mohamedashour.weatherapp.data.models.Result
+import com.example.mohamedashour.weatherapp.data.models.Posts
 import com.example.mohamedashour.weatherapp.ui.activities.base.mvp.IBasePresenter
 import com.example.mohamedashour.weatherapp.ui.activities.base.mvp.IBaseView
 
 interface HomeContract {
     interface HomeView : IBaseView {
-        fun receiveData(list : List<Result>)
-        fun receiveFavorites(list: List<Movie>)
-        fun movieDeleted()
+        fun receiveData(list : ArrayList<Posts>)
+        fun postDeleted(tem: Posts)
     }
     interface HomePresenter : IBasePresenter<HomeView> {
-        fun getHomeData()
-        fun getHighestMovies()
-        fun getFavoriteMovies()
-        fun deleteMovie(movie: Movie)
+        fun getHomeData(start: Int)
+        fun deletePost(id: Int, item: Posts)
     }
 }

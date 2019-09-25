@@ -1,10 +1,12 @@
 <resources>
-    <string name="app_name">MoviesAppKotlin</string>
+    <string name="app_name">Thiqah Test</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="label_popular">Popular</string>
     <string name="label_highest">Highest</string>
     <string name="label_favorite">Favorites</string>
-    <string name="msg_done">Movie added successfully</string>
+    <string name="label_title">Title : </string>
+    <string name="label_details">Details : </string>
+    <string name="msg_deleted">Post deleted successfully</string>
 </resources>
