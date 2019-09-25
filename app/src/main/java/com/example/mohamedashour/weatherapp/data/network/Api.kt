@@ -1,18 +1,18 @@
 package com.example.mohamedashour.weatherapp.data.network
 
-import com.example.mohamedashour.weatherapp.data.models.FakeModel
-import com.example.mohamedashour.weatherapp.data.models.MovieDetails
+import com.example.mohamedashour.weatherapp.data.models.PostRequest
 import com.example.mohamedashour.weatherapp.data.models.Posts
 import com.google.gson.JsonElement
 import retrofit2.Call
-import retrofit2.http.DELETE
-import retrofit2.http.Url
-import retrofit2.http.GET
+import retrofit2.http.*
 
 interface Api {
 
-    @GET
-    fun getMovieDetails(@Url url: String): Call<MovieDetails>
+    @POST("posts")
+    fun addPost(@Body request: PostRequest): Call<Posts>
+
+    @PUT("posts/{id}")
+    fun updatePost(@Path("id") id: String, @Body request: PostRequest): Call<Posts>
 
     @DELETE
     fun deletePost(@Url url: String) : Call<JsonElement>

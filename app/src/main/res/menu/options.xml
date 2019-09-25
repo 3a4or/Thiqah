@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-            android:id="@+id/popular"
-            android:title="@string/label_popular" />
-    <item
-            android:id="@+id/highest"
-            android:title="@string/label_highest" />
-    <item
-            android:id="@+id/fav"
-            android:title="@string/label_favorite" />
+            android:id="@+id/add_post"
+            android:title="@string/label_add" />
 </menu>

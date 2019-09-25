@@ -9,7 +9,6 @@ import okhttp3.Cache
 import okhttp3.CacheControl
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
@@ -20,12 +19,6 @@ import java.util.concurrent.TimeUnit
 object RetrofitClient {
     private const val BASE_URL = "https://jsonplaceholder.typicode.com/"
     var retrofit: Retrofit? = null
-
-    val cacheSize = 10 * 1024 * 1024 // 10 MB
-
-    val httpCacheDirectory = File(App.instance().cacheDir, "http-cache")
-
-    val cache = Cache(httpCacheDirectory, cacheSize.toLong())
 
     val onlineInterceptor = Interceptor { chain ->
         val response = chain.proceed(chain.request())
@@ -57,8 +50,6 @@ object RetrofitClient {
                 .cache(Cache(App.instance().cacheDir, 10 * 1024 * 1024))
                 .addNetworkInterceptor(onlineInterceptor)
                 .addInterceptor(offlineInterceptor)
-                /*.connectTimeout(3600, TimeUnit.SECONDS).readTimeout(3600, TimeUnit.SECONDS)
-                .writeTimeout(3600, TimeUnit.SECONDS)*/
                 .build()
             retrofit = Retrofit.Builder().baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())

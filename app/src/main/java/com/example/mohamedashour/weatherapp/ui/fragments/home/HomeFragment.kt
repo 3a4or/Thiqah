@@ -51,6 +51,7 @@ class HomeFragment : BaseFragment(), HomeContract.HomeView {
     }
 
     private fun init() {
+        setHasOptionsMenu(true)
         presenter = HomePresenter(this)
         bundle = Bundle()
         initPopup()
@@ -101,6 +102,17 @@ class HomeFragment : BaseFragment(), HomeContract.HomeView {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.options, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item?.itemId) {
+            R.id.add_post -> showPopup(0, 1, "", "", "add", 0)
+        }
+        return super.onOptionsItemSelected(item)
+    }
     override fun receiveData(list: ArrayList<Posts>, type: String) {
         if (type == "first") {
             adapter = PostsAdapter(this.context!!, list,
@@ -109,8 +121,7 @@ class HomeFragment : BaseFragment(), HomeContract.HomeView {
                         when (type) {
                             "container" -> openPostDetails(list[position].id, list[position].title, list[position].body)
                             "delete" -> presenter.deletePost(list[position].id, list[position])
-                            "edit" -> showPopup(list[position].id, list[position].userId, list[position].title, list[position].body, "edit")
-                            "add" -> showPopup(list[position].id, list[position].userId, "", "", "add")
+                            "edit" -> showPopup(list[position].id, list[position].userId, list[position].title, list[position].body, "edit", position)
                         }
                     }
                 })
@@ -121,11 +132,11 @@ class HomeFragment : BaseFragment(), HomeContract.HomeView {
         }
     }
 
-    private fun showPopup(id: Int, userId: Int, title: String, body: String, type: String) {
+    private fun showPopup(id: Int, userId: Int, title: String, body: String, type: String, index: Int) {
         titleEditText.setText(title)
         bodyEditText.setText(body)
         saveBtn.setOnClickListener{
-            presenter.validation(titleEditText.text.toString(), bodyEditText.text.toString(), id, userId, type)
+            presenter.validation(titleEditText.text.toString(), bodyEditText.text.toString(), id, userId, type, index)
         }
         cancelBtn.setOnClickListener{
             loadingBar.dismiss()
@@ -155,11 +166,24 @@ class HomeFragment : BaseFragment(), HomeContract.HomeView {
         bodyEditText.error = context!!.resources.getString(R.string.msg_body_first)
     }
 
-    override fun validationDone(id: Int, userId: Int, type: String) {
+    override fun validationDone(id: Int, userId: Int, type: String, index: Int) {
+        when (type) {
+            "add" -> presenter.addPost(titleEditText.text.toString(), bodyEditText.text.toString(), userId, type)
+            "edit" -> presenter.updatePost(titleEditText.text.toString(), bodyEditText.text.toString(), id, userId, type, index)
+        }
         loadingBar.dismiss()
     }
 
-    override fun requestFinished(type: String, newModel: Posts) {
-
+    override fun requestFinished(type: String, newModel: Posts, index: Int) {
+        if (type == "add") {
+            showToastMessage(context!!.resources.getString(R.string.msg_added))
+            adapter.list.add(newModel)
+            adapter.notifyDataSetChanged()
+            mainRecycler.scrollToPosition(adapter.list.size - 1)
+        } else if (type == "edit") {
+            showToastMessage(context!!.resources.getString(R.string.msg_updated))
+            adapter.list[index] = newModel
+            adapter.notifyDataSetChanged()
+        }
     }
 }

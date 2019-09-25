@@ -1,6 +1,7 @@
 package com.example.mohamedashour.weatherapp.ui.fragments.home
 
 import android.util.Log
+import com.example.mohamedashour.weatherapp.data.models.PostRequest
 import com.example.mohamedashour.weatherapp.data.models.Posts
 import com.example.mohamedashour.weatherapp.ui.activities.base.mvp.BasePresenter
 import com.example.mohamedashour.weatherapp.data.network.RetrofitClient
@@ -57,7 +58,7 @@ class HomePresenter(view: HomeContract.HomeView) : BasePresenter<HomeContract.Ho
         })
     }
 
-    override fun validation(title: String, body: String, id: Int, userId: Int, type: String) {
+    override fun validation(title: String, body: String, id: Int, userId: Int, type: String, index: Int) {
         if (title == "") {
             view!!.errorTitle()
         }
@@ -65,15 +66,39 @@ class HomePresenter(view: HomeContract.HomeView) : BasePresenter<HomeContract.Ho
             view!!.errorBody()
         }
         if (title != "" && body != "") {
-            view!!.validationDone(id, userId, type)
+            view!!.validationDone(id, userId, type, index)
         }
     }
 
-    override fun addPost(title: String, body: String, id: Int, userId: Int, type: String) {
+    override fun addPost(title: String, body: String, userId: Int, type: String) {
+        view!!.setProgressBar(true)
+        var request = PostRequest(body, title, userId)
+        val call: Call<Posts> = RetrofitClient.webService().addPost(request)
+        call.enqueue(object : Callback<Posts> {
+            override fun onResponse(call: Call<Posts>, response: Response<Posts>) {
+                view!!.setProgressBar(false)
+                view!!.requestFinished(type, response.body()!!, 0)
+            }
 
+            override fun onFailure(call: Call<Posts>, t: Throwable) {
+                view!!.setProgressBar(false)
+            }
+        })
     }
 
-    override fun updatePost(title: String, body: String, id: Int, userId: Int, type: String) {
+    override fun updatePost(title: String, body: String, id: Int, userId: Int, type: String, index: Int) {
+        view!!.setProgressBar(true)
+        var request = PostRequest(body, title, userId)
+        val call: Call<Posts> = RetrofitClient.webService().updatePost(id.toString(), request)
+        call.enqueue(object : Callback<Posts> {
+            override fun onResponse(call: Call<Posts>, response: Response<Posts>) {
+                view!!.setProgressBar(false)
+                view!!.requestFinished(type, response.body()!!, index)
+            }
 
+            override fun onFailure(call: Call<Posts>, t: Throwable) {
+                view!!.setProgressBar(false)
+            }
+        })
     }
 }

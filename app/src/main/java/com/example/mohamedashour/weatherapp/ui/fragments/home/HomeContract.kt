@@ -10,14 +10,14 @@ interface HomeContract {
         fun postDeleted(tem: Posts)
         fun errorTitle()
         fun errorBody()
-        fun validationDone(id: Int, userId: Int, type: String)
-        fun requestFinished(type: String, newModel: Posts)
+        fun validationDone(id: Int, userId: Int, type: String, index: Int)
+        fun requestFinished(type: String, newModel: Posts, index: Int)
     }
     interface HomePresenter : IBasePresenter<HomeView> {
         fun getHomeData(start: Int, type: String)
         fun deletePost(id: Int, item: Posts)
-        fun validation(title: String, body: String, id: Int, userId: Int, type: String)
-        fun updatePost(title: String, body: String, id: Int, userId: Int, type: String)
-        fun addPost(title: String, body: String, id: Int, userId: Int, type: String)
+        fun validation(title: String, body: String, id: Int, userId: Int, type: String, index: Int)
+        fun updatePost(title: String, body: String, id: Int, userId: Int, type: String, index: Int)
+        fun addPost(title: String, body: String, userId: Int, type: String)
     }
 }
